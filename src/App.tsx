@@ -2,6 +2,7 @@ import Toolbar from './components/Toolbar/Toolbar';
 import {Route, Routes} from 'react-router-dom';
 import All from './containers/All/All';
 import NewQuote from './containers/NewQuote/NewQuote';
+import Quotes from './containers/Quotes/Quotes';
 
 function App() {
 
@@ -23,7 +24,8 @@ function App() {
             </div>
             <div className="col-md-9">
               <Routes>
-                <Route path="/quotes" element={<NewQuote/>}/>
+                <Route path="/quotes" element={<Quotes/>}/>
+                <Route path="/add-quote" element={<NewQuote/>}/>
               </Routes>
             </div>
           </div>

@@ -15,7 +15,7 @@ const category = [
 const NewQuote = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [selectCategory, setSelectCategory] = useState('All');
+  const [selectCategory, setSelectCategory] = useState('');
   const [quotes, SetQuotes] = useState<PostQuote>({
     author: '',
     category: '',
@@ -23,19 +23,7 @@ const NewQuote = () => {
   });
 
   useEffect(() => {
-    const postQuoteData = async () => {
-      try {
-        const responseData = await axiosApi.get(`/quotes.json`);
-        if (responseData.status === 200) {
-          SetQuotes(responseData.data);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }finally {
-        setLoading(false);
-      }
-    };
-    void postQuoteData();
+
     setLoading(false);
   }, []);
 
@@ -60,7 +48,6 @@ const NewQuote = () => {
 
     try {
       await axiosApi.post('quotes.json', quotes)
-      console.log('Sending data:', quotes);
 
       navigate('/');
     } catch (error) {

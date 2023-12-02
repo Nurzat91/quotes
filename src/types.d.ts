@@ -7,3 +7,7 @@ export interface PostQuote{
   category: string;
   text: string;
 }
+
+// export interface GetQuotes{
+//   quotes: PostQuote;
+// }
