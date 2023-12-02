@@ -17,8 +17,6 @@ function App() {
                 <div className="offcanvas-body">
                   <Routes>
                     <Route path="/" element={<Category/>}/>
-                    {/*<Route path="/all" element={<Category/>}/>*/}
-                    {/*<Route path="/quotes/star-wars" element={<Category/>}/>*/}
                     <Route path="*" element={<Category/>}/>
                   </Routes>
                 </div>
@@ -30,6 +28,12 @@ function App() {
                 <Route path="/quotes" element={<Quotes/>}/>
                 <Route path="/add-quote" element={<NewQuote/>}/>
                 <Route path="/quotes/:id/edit" element={<NewQuote/>}/>
+                <Route path="/all" element={<Category/>}/>
+                <Route path="/quotes/star-wars" element={<Category/>}/>
+                <Route path="/quotes/famous-people" element={<Category/>}/>
+                <Route path="/quotes/saying" element={<Category/>}/>
+                <Route path="/quotes/humour" element={<Category/>}/>
+                <Route path="/quotes/motivational" element={<Category/>}/>
               </Routes>
             </div>
           </div>

@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axiosApi from '../../axiosApi';
 import categories from '../../Categories';
+import Spinner from '../Spinner/Spinner';
+import { PostQuote } from '../../types';
 
 const Category = () => {
-  const navigate = useNavigate();
   const { category: selectedCategoryParam } = useParams();
-  const [selectedCategory, setSelectedCategory] = useState(selectedCategoryParam || 'all');
-  const [quotes, setQuotes] = useState<string>([]);
+  const [quotes, setQuotes] = useState<PostQuote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(selectedCategoryParam || 'all');
 
   useEffect(() => {
     void getQuotes(selectedCategory);
@@ -23,27 +24,12 @@ const Category = () => {
     try {
       const response = await axiosApi.get(url);
       const data = response.data;
-      let fetchedQuotes = data ? Object.values(data) : [];
-      console.log('1',data);
-      console.log('2',fetchedQuotes);
-      console.log('3',quotes);
-
-
-      if (category === 'all') {
-        fetchedQuotes = fetchedQuotes.filter((quote) => quote.category !== undefined);
-      }
-
-      setQuotes(fetchedQuotes);
+      setQuotes(data ? Object.values(data) : []);
     } catch (error) {
       console.error('Error fetching quotes:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleCategoryClick = (category:string) => {
-    setSelectedCategory(category);
-    navigate(`/quotes/${category}`);
   };
 
   return (
@@ -52,14 +38,10 @@ const Category = () => {
         <div className="col-md-3">
           <div className="offcanvas offcanvas-start show" style={{ marginTop: '63px' }}>
             <div className="offcanvas-body">
-              <ul>
+              <ul style={{listStyle: 'none'}}>
                 {categories.map((category) => (
                   <li key={category.id}>
-                    <Link
-                      to={`/quotes/${category.id}`}
-                      onClick={() => handleCategoryClick(category.id)}
-                      className={category.id === selectedCategory ? 'active' : ''}
-                    >
+                    <Link to={`/quotes/${category.id}`}>
                       {category.title}
                     </Link>
                   </li>
@@ -67,6 +49,23 @@ const Category = () => {
               </ul>
             </div>
           </div>
+        </div>
+        <div className="col-md-9">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <div>
+              <ul style={{listStyle: 'none'}}>
+                {quotes.map((quote, index) => (
+                  <li key={index}>
+                    <h2>{quote.category}</h2>
+                    <div>{quote.text}</div>
+                    <div><strong>Author: </strong> {quote.author}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
