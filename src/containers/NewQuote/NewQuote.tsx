@@ -2,16 +2,9 @@ import {useCallback, useEffect, useState} from 'react';
 import {PostQuote} from '../../types';
 import Spinner from '../../components/Spinner/Spinner';
 import axiosApi from '../../axiosApi';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import categories from '../../Categories';
 
-const category = [
-  {id: 1, name: 'All'},
-  {id: 2, name: 'Star Wars'},
-  {id: 3, name: 'Famous people'},
-  {id: 4, name: 'Saying'},
-  {id: 5, name: 'Humour'},
-  {id: 6, name: 'Motivational'},
-];
 const NewQuote = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -21,11 +14,31 @@ const NewQuote = () => {
     category: '',
     text: '',
   });
+  const param = useParams() as { id: string };
 
   useEffect(() => {
+    const getPostData = async () => {
+      try {
+        if (param.id) {
+          const responseData = await axiosApi.get(`/quotes/${param.id}.json`);
+          if (responseData.status === 200) {
+            SetQuotes(responseData.data);
+            setSelectCategory(responseData.data.category);
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setLoading(false);
-  }, []);
+    if (!param.id) {
+      setLoading(false);
+    } else {
+      void getPostData();
+    }
+  }, [param.id]);
 
   const onChanged = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -47,9 +60,13 @@ const NewQuote = () => {
     event.preventDefault();
 
     try {
-      await axiosApi.post('quotes.json', quotes)
+      if (param.id) {
+        await axiosApi.put(`/quotes/${param.id}.json`, quotes);
+      } else {
+        await axiosApi.post('quotes.json', quotes);
+      }
 
-      navigate('/');
+      navigate('/quotes');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -62,7 +79,7 @@ const NewQuote = () => {
             <Spinner/>
           ) :(
           <form onSubmit={onFormSubmit}>
-            <h3>Submit new quote</h3>
+            <h3>{param.id ? 'Edit quote' : 'A Submit new quote'}</h3>
             <div className="form-group">
               <h6>Category</h6>
               <select
@@ -70,8 +87,11 @@ const NewQuote = () => {
                 value={selectCategory}
                 onChange={onChanged}
               >
-                {category.map((categories) => (
-                  <option key={categories.id} value={categories.name}>{categories.name}</option>
+                <option value="" disabled>
+                  Выберите категорию
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.title}</option>
                 ))}
               </select>
             </div>
@@ -102,8 +122,8 @@ const NewQuote = () => {
                 onChange={onChanged}
               />
             </div>
-            <button type="submit" className="btn btn-primary mt-3">
-              SAVE
+            <button type="submit" className="btn btn-primary mt-2">
+              {param.id ? 'UPDATE' : 'SAVE'}
             </button>
           </form>
         )}

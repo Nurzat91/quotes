@@ -1,8 +1,8 @@
 import Toolbar from './components/Toolbar/Toolbar';
 import {Route, Routes} from 'react-router-dom';
-import All from './containers/All/All';
 import NewQuote from './containers/NewQuote/NewQuote';
 import Quotes from './containers/Quotes/Quotes';
+import Category from './components/Category/Category';
 
 function App() {
 
@@ -16,16 +16,20 @@ function App() {
               <div className="offcanvas offcanvas-start show" style={{marginTop: '63px'}}>
                 <div className="offcanvas-body">
                   <Routes>
-                    <Route path="/" element={<All/>}/>
-                    <Route path="*" element={<All/>}/>
+                    <Route path="/" element={<Category/>}/>
+                    {/*<Route path="/all" element={<Category/>}/>*/}
+                    {/*<Route path="/quotes/star-wars" element={<Category/>}/>*/}
+                    <Route path="*" element={<Category/>}/>
                   </Routes>
                 </div>
               </div>
             </div>
             <div className="col-md-9">
               <Routes>
+                <Route path="/" element={<Quotes/>}/>
                 <Route path="/quotes" element={<Quotes/>}/>
                 <Route path="/add-quote" element={<NewQuote/>}/>
+                <Route path="/quotes/:id/edit" element={<NewQuote/>}/>
               </Routes>
             </div>
           </div>

@@ -11,3 +11,8 @@ export interface PostQuote{
 // export interface GetQuotes{
 //   quotes: PostQuote;
 // }
+
+export interface Categories{
+  id: string;
+  title: string;
+}
