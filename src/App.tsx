@@ -1,6 +1,6 @@
 import Toolbar from './components/Toolbar/Toolbar';
 import {Route, Routes} from 'react-router-dom';
-import All from './components/All/All';
+import All from './containers/All/All';
 import NewQuote from './containers/NewQuote/NewQuote';
 
 function App() {
